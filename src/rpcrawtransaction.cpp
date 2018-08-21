@@ -43,7 +43,7 @@ void ScriptPubKeyToJSON(const CScript& scriptPubKey, Object& out, bool fIncludeH
     out.push_back(Pair("addresses", a));
 }
 
-void TxToJSON(const CTransaction& tx, const uint256 hashBlock, Object& entry)
+void TxToJSON(const CTransaction& tx, const uint256 hashBlock, Object& entry, bool expanded)
 {
     entry.push_back(Pair("txid", tx.GetHash().GetHex()));
     entry.push_back(Pair("version", tx.nVersion));
@@ -107,6 +107,53 @@ void TxToJSON(const CTransaction& tx, const uint256 hashBlock, Object& entry)
     };
     entry.push_back(Pair("vout", vout));
 
+    if (expanded) {
+        uint256 txid = tx.GetHash();
+        if (!(tx.IsCoinBase())) {
+            const Value& oldVinV = find_value(entry, "vin");
+            const Array& oldVin = oldVinV.get_array();
+            Array newVin;
+            for (unsigned int i = 0; i < tx.vin.size(); i++) {
+                const CTxIn& txin = tx.vin[i];
+                Value inV = oldVin[i];
+                Object in = inV.get_obj();
+                // Add address and value info if spentindex enabled
+                CSpentIndexValue spentInfo;
+                CSpentIndexKey spentKey(txin.prevout.hash, txin.prevout.n);
+                if (GetSpentIndex(spentKey, spentInfo)) {
+                    in.push_back(Pair("value", ValueFromAmount(spentInfo.satoshis)));
+                    in.push_back(Pair("valueSat", spentInfo.satoshis));
+                    if (spentInfo.addressType == 1) {
+                        in.push_back(Pair("address", CBitcoinAddress(CKeyID(spentInfo.addressHash)).ToString()));
+                    } else if (spentInfo.addressType == 2) {
+                        in.push_back(Pair("address", CBitcoinAddress(CScriptID(spentInfo.addressHash)).ToString()));
+                    }
+                }
+                newVin.push_back(in);
+            }
+            entry.push_back(Pair("vin", newVin));
+        }
+        const Value& oldVoutV = find_value(entry, "vout");
+        const Array& oldVout = oldVoutV.get_array();
+        Array newVout;
+        for (unsigned int i = 0; i < tx.vout.size(); i++) {
+            const CTxOut& txout = tx.vout[i];
+            Value outV = oldVout[i];
+            Object out = outV.get_obj();
+            // Add spent information if spentindex is enabled
+            CSpentIndexValue spentInfo;
+            CSpentIndexKey spentKey(txid, i);
+            if (GetSpentIndex(spentKey, spentInfo)) {
+                out.push_back(Pair("spentTxId", spentInfo.txid.GetHex()));
+                out.push_back(Pair("spentIndex", (int)spentInfo.inputIndex));
+                out.push_back(Pair("spentHeight", spentInfo.blockHeight));
+            }
+            out.push_back(Pair("valueSat", txout.nValue));
+            newVout.push_back(out);
+        }
+        entry.push_back(Pair("vout", newVout));
+    }
+
     if (hashBlock != 0)
     {
         entry.push_back(Pair("blockhash", hashBlock.GetHex()));
@@ -116,11 +163,14 @@ void TxToJSON(const CTransaction& tx, const uint256 hashBlock, Object& entry)
             CBlockIndex* pindex = (*mi).second;
             if (pindex->IsInMainChain())
             {
+                entry.push_back(Pair("height", pindex->nHeight));
                 entry.push_back(Pair("confirmations", 1 + nBestHeight - pindex->nHeight));
                 entry.push_back(Pair("time", (int64_t)pindex->nTime));
                 entry.push_back(Pair("blocktime", (int64_t)pindex->nTime));
-            } else
+            } else {
+                entry.push_back(Pair("height", -1));
                 entry.push_back(Pair("confirmations", 0));
+            }
         };
     };
 }
@@ -156,7 +206,7 @@ Value getrawtransaction(const Array& params, bool fHelp)
 
     Object result;
     result.push_back(Pair("hex", strHex));
-    TxToJSON(tx, hashBlock, result);
+    TxToJSON(tx, hashBlock, result, true);
     return result;
 }
 
@@ -320,7 +370,7 @@ Value decoderawtransaction(const Array& params, bool fHelp)
     }
 
     Object result;
-    TxToJSON(tx, 0, result);
+    TxToJSON(tx, 0, result, false);
 
     return result;
 }

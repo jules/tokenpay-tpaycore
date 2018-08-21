@@ -599,6 +599,10 @@ public:
 
     bool IsPayToScriptHash() const;
 
+    bool IsPayToPublicKeyHash() const;
+
+    bool IsPayToPublicKey() const;
+
     // Called by IsStandardTx and P2SH VerifyScript (which makes it consensus-critical).
     bool IsPushOnly() const
     {

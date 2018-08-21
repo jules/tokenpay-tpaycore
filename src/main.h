@@ -13,6 +13,9 @@
 #include "script.h"
 #include "scrypt.h"
 #include "state.h"
+#include "spentindex.h"
+#include "addressindex.h"
+#include "timestampindex.h"
 
 #include <list>
 
@@ -44,6 +47,10 @@ static const unsigned int MAX_GETHEADERS_SZ = 2000;
 static const unsigned int MAX_MULTI_BLOCK_SIZE = 5120000;    // 5MiB, most likely to hit MAX_MULTI_BLOCK_ELEMNTS first
 static const unsigned int MAX_MULTI_BLOCK_ELEMENTS = 64;     // processing larger blocks is cpu intensive
 static const unsigned int MAX_MULTI_BLOCK_THIN_ELEMENTS = 128;
+
+static const bool DEFAULT_ADDRESSINDEX = false;
+static const bool DEFAULT_TIMESTAMPINDEX = false;
+static const bool DEFAULT_SPENTINDEX = false;
 
 /** No amount larger than this (in satoshi) is valid */
 static const int64_t MAX_MONEY = std::numeric_limits<int64_t>::max();
@@ -86,6 +93,9 @@ extern int64_t nLastCoinStakeSearchInterval;
 extern const std::string strMessageMagic;
 extern int64_t nTimeBestReceived;
 extern bool fImporting;
+extern bool fAddressIndex;
+extern bool fSpentIndex;
+extern bool fTimestampIndex;
 extern CCriticalSection cs_setpwalletRegistered;
 extern std::set<CWallet*> setpwalletRegistered;
 struct COrphanBlock {
@@ -163,6 +173,15 @@ bool AddKeyToMerkleFilters(const CTxDestination& address);
 bool GetCoinAgeThin(CTransaction txCoinStake, uint64_t& nCoinAge,  std::vector<const CWalletTx*> &vWtxPrev);
 
 bool GetWalletFile(CWallet* pwallet, std::string &strWalletFileOut);
+
+bool GetTimestampIndex(const unsigned int &high, const unsigned int &low, const bool fActiveOnly, std::vector<std::pair<uint256, unsigned int> > &hashes);
+bool GetSpentIndex(CSpentIndexKey &key, CSpentIndexValue &value);
+bool HashOnchainActive(const uint256 &hash);
+bool GetAddressIndex(uint160 addressHash, int type,
+                     std::vector<std::pair<CAddressIndexKey, int64_t> > &addressIndex,
+                     int start = 0, int end = 0);
+bool GetAddressUnspent(uint160 addressHash, int type,
+                       std::vector<std::pair<CAddressUnspentKey, CAddressUnspentValue> > &unspentOutputs);
 
 
 /** Get statistics from node state */
@@ -941,8 +960,8 @@ public:
 
 
 
-    bool DisconnectBlock(CTxDB& txdb, CBlockIndex* pindex);
-    bool ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck=false);
+    bool DisconnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool ignoreAddressIndex=false);
+    bool ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck=false, bool ignoreAddressIndex=false);
 
     bool ReadFromDisk(const CBlockIndex* pindex, bool fReadTransactions=true);
     bool SetBestChain(CTxDB& txdb, CBlockIndex* pindexNew);

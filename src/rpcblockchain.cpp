@@ -9,13 +9,16 @@
 #include "txdb.h"
 #include "kernel.h"
 #include "checkpoints.h"
+#include "spentindex.h"
+#include "addressindex.h"
+#include "timestampindex.h"
 #include <errno.h>
 
 
 using namespace json_spirit;
 using namespace std;
 
-extern void TxToJSON(const CTransaction& tx, const uint256 hashBlock, json_spirit::Object& entry);
+extern void TxToJSON(const CTransaction& tx, const uint256 hashBlock, json_spirit::Object& entry, bool expanded);
 
 double BitsToDouble(unsigned int nBits)
 {
@@ -153,6 +156,83 @@ double GetPoSKernelPS()
     return result;
 }
 
+Object blockToDeltasJSON(const CBlock& block, const CBlockIndex* blockindex)
+{
+    Object result;
+    result.push_back(Pair("hash", block.GetHash().GetHex()));
+    CMerkleTx txGen(block.vtx[0]);
+    int confirmations = (int)txGen.GetDepthInMainChain();
+    result.push_back(Pair("confirmations", confirmations));
+    result.push_back(Pair("size", (int)::GetSerializeSize(block, SER_NETWORK, PROTOCOL_VERSION)));
+    result.push_back(Pair("height", blockindex->nHeight));
+    result.push_back(Pair("version", block.nVersion));
+    result.push_back(Pair("merkleroot", block.hashMerkleRoot.GetHex()));
+    Array deltas;
+    for (unsigned int i = 0; i < block.vtx.size(); i++) {
+        const CTransaction &tx = block.vtx[i];
+        const uint256 txhash = tx.GetHash();
+        Object entry;
+        entry.push_back(Pair("txid", txhash.GetHex()));
+        entry.push_back(Pair("index", (int)i));
+        Array inputs;
+        if (!tx.IsCoinBase()) {
+            for (size_t j = 0; j < tx.vin.size(); j++) {
+                const CTxIn input = tx.vin[j];
+                Object delta;
+                CSpentIndexValue spentInfo;
+                CSpentIndexKey spentKey(input.prevout.hash, input.prevout.n);
+                if (GetSpentIndex(spentKey, spentInfo)) {
+                    if (spentInfo.addressType == 1) {
+                        delta.push_back(Pair("address", CBitcoinAddress(CKeyID(spentInfo.addressHash)).ToString()));
+                    } else if (spentInfo.addressType == 2)  {
+                        delta.push_back(Pair("address", CBitcoinAddress(CScriptID(spentInfo.addressHash)).ToString()));
+                    } else {
+                        continue;
+                    }
+                    delta.push_back(Pair("satoshis", -1 * spentInfo.satoshis));
+                    delta.push_back(Pair("index", (int)j));
+                    delta.push_back(Pair("prevtxid", input.prevout.hash.GetHex()));
+                    delta.push_back(Pair("prevout", (int)input.prevout.n));
+                    inputs.push_back(delta);
+                } else {
+                    throw JSONRPCError(RPC_INTERNAL_ERROR, "Spent information not available");
+                }
+            }
+        }
+        entry.push_back(Pair("inputs", inputs));
+        Array outputs;
+        for (unsigned int k = 0; k < tx.vout.size(); k++) {
+            const CTxOut &out = tx.vout[k];
+            Object delta;
+            if (out.scriptPubKey.IsPayToScriptHash()) {
+                std::vector<unsigned char> hashBytes(out.scriptPubKey.begin()+2, out.scriptPubKey.begin()+22);
+                delta.push_back(Pair("address", CBitcoinAddress(CScriptID(uint160(hashBytes))).ToString()));
+            } else if (out.scriptPubKey.IsPayToPublicKeyHash()) {
+                std::vector<unsigned char> hashBytes(out.scriptPubKey.begin()+3, out.scriptPubKey.begin()+23);
+                delta.push_back(Pair("address", CBitcoinAddress(CKeyID(uint160(hashBytes))).ToString()));
+            } else {
+                continue;
+            }
+            delta.push_back(Pair("satoshis", out.nValue));
+            delta.push_back(Pair("index", (int)k));
+            outputs.push_back(delta);
+        }
+        entry.push_back(Pair("outputs", outputs));
+        deltas.push_back(entry);
+    }
+    result.push_back(Pair("deltas", deltas));
+    result.push_back(Pair("time", block.GetBlockTime()));
+    result.push_back(Pair("mediantime", (int64_t)blockindex->GetMedianTimePast()));
+    result.push_back(Pair("nonce", (uint64_t)block.nNonce));
+    result.push_back(Pair("bits", strprintf("%08x", block.nBits)));
+    result.push_back(Pair("difficulty", GetDifficulty(blockindex)));
+    if (blockindex->pprev)
+        result.push_back(Pair("previousblockhash", blockindex->pprev->GetBlockHash().GetHex()));
+    if (blockindex->pnext)
+        result.push_back(Pair("nextblockhash", blockindex->pnext->GetBlockHash().GetHex()));
+    return result;
+}
+
 Object blockToJSON(const CBlock& block, const CBlockIndex* blockindex, bool fPrintTransactionDetail)
 {
     Object result;
@@ -189,7 +269,7 @@ Object blockToJSON(const CBlock& block, const CBlockIndex* blockindex, bool fPri
             Object entry;
 
             entry.push_back(Pair("txid", tx.GetHash().GetHex()));
-            TxToJSON(tx, 0, entry);
+            TxToJSON(tx, 0, entry, false);
 
             txinfo.push_back(entry);
         }
@@ -866,5 +946,78 @@ Value thinforcestate(const Array& params, bool fHelp)
     else
         result.push_back(Pair("result", "Failed."));
 
+    return result;
+}
+
+Value getblockdeltas(const Array& params, bool fHelp)
+{
+    if (fHelp || params.size() != 1)
+        throw std::runtime_error("");
+
+    std::string strHash = params[0].get_str();
+    uint256 hash = uint256(strHash);
+
+    if (mapBlockIndex.count(hash) == 0)
+        throw JSONRPCError(RPC_INVALID_ADDRESS_OR_KEY, "Block not found");
+
+    CBlock block;
+    CBlockIndex* pblockindex = mapBlockIndex[hash];
+    if(!block.ReadFromDisk(pblockindex, true))
+        throw JSONRPCError(RPC_INTERNAL_ERROR, "Can't read block from disk");
+    return blockToDeltasJSON(block, pblockindex);
+}
+
+Value getblockhashes(const Array& params, bool fHelp)
+{
+    if (fHelp || params.size() < 2)
+        throw std::runtime_error(
+                "getblockhashes timestamp\n"
+                "\nReturns array of hashes of blocks within the timestamp range provided.\n"
+                "\nArguments:\n"
+                "1. high         (numeric, required) The newer block timestamp\n"
+                "2. low          (numeric, required) The older block timestamp\n"
+                "3. options      (string, required) A json object\n"
+                "    {\n"
+                "      \"noOrphans\":true   (boolean) will only include blocks on the main chain\n"
+                "      \"logicalTimes\":true   (boolean) will include logical timestamps with hashes\n"
+                "    }\n"
+                "\nResult:\n"
+                "[\n"
+                "  \"hash\"         (string) The block hash\n"
+                "]\n"
+                "[\n"
+                "  {\n"
+                "    \"blockhash\": (string) The block hash\n"
+                "    \"logicalts\": (numeric) The logical timestamp\n"
+                "  }\n"
+                "]\n"
+        );
+    unsigned int high = params[0].get_int();
+    unsigned int low = params[1].get_int();
+    bool fActiveOnly = false;
+    bool fLogicalTS = false;
+    if (params.size() > 2) {
+        Value noOrphans = find_value(params[2].get_obj(), "noOrphans");
+        Value returnLogical = find_value(params[2].get_obj(), "logicalTimes");
+        fActiveOnly = noOrphans.get_bool();
+        fLogicalTS = returnLogical.get_bool();
+    }
+    std::vector<std::pair<uint256, unsigned int> > blockHashes;
+    if (fActiveOnly)
+        LOCK(cs_main);
+    if (!GetTimestampIndex(high, low, fActiveOnly, blockHashes)) {
+        throw runtime_error("No information available for block hashes");
+    }
+    Array result;
+    for (std::vector<std::pair<uint256, unsigned int> >::const_iterator it=blockHashes.begin(); it!=blockHashes.end(); it++) {
+        if (fLogicalTS) {
+            Object item;
+            item.push_back(Pair("blockhash", it->first.GetHex()));
+            item.push_back(Pair("logicalts", (int)it->second));
+            result.push_back(item);
+        } else {
+            result.push_back(it->first.GetHex());
+        }
+    }
     return result;
 }

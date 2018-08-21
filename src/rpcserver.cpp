@@ -393,6 +393,15 @@ static const CRPCCommand vRPCCommands[] =
     { "bip32",                  &extkey,                 false,     false,     true  },
     { "mnemonic",               &mnemonic,               false,     false,     false },
     { "bip39",                  &mnemonic,               false,     false,     false },
+    { "getblockdeltas",         &getblockdeltas,         false,     false,     true },
+    { "getblockhashes",         &getblockhashes,         false,     false,     true },
+    { "getaddressmempool",      &getaddressmempool,      false,     false,     true },
+    { "getaddressutxos",        &getaddressutxos,        false,     false,     true },
+    { "getaddressdeltas",       &getaddressdeltas,       false,     false,     true },
+    { "getaddresstxids",        &getaddresstxids,        false,     false,     true },
+    { "getaddressbalance",      &getaddressbalance,      false,     false,     true },
+    { "getspentinfo",           &getspentinfo,           false,     false,     true },
+    { "getblockchaininfo",      &getblockchaininfo,      false,     false,     true },
 };
 
 CRPCTable::CRPCTable()

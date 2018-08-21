@@ -41,7 +41,7 @@ Object CallRPC(const string& strMethod, const Array& params)
     // Connect to localhost
     bool fUseSSL = GetBoolArg("-rpcssl", false);
     asio::io_service io_service;
-    ssl::context context(io_service, ssl::context::sslv23);
+    ssl::context context(ssl::context::sslv23);
     context.set_options(ssl::context::no_sslv2);
     asio::ssl::stream<asio::ip::tcp::socket> sslStream(io_service, context);
     SSLIOStreamDevice<asio::ip::tcp> d(sslStream, fUseSSL);
@@ -171,6 +171,15 @@ static const CRPCConvertParam vRPCConvertParams[] =
     { "checkkernel", 0 },
     { "checkkernel", 1 },
     { "submitblock", 1 },
+    { "getblockhashes", 0 },
+    { "getblockhashes", 1 },
+    { "getblockhashes", 2 },
+    { "getspentinfo", 0 },
+    { "getaddresstxids", 0 },
+    { "getaddressbalance", 0 },
+    { "getaddressdeltas", 0 },
+    { "getaddressutxos", 0 },
+    { "getaddressmempool", 0 },
 };
 
 class CRPCConvertTable

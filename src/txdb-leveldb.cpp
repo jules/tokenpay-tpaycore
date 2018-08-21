@@ -390,6 +390,159 @@ bool CTxDB::WriteHashBestHeaderChain(uint256 hashBestChain)
     return Write(string("hashBestHeaderChain"), hashBestChain);
 };
 
+//
+
+bool CTxDB::ReadSpentIndex(CSpentIndexKey &key, CSpentIndexValue &value) {
+    return Read(std::make_pair(string("spentIndex"), key), value);
+}
+bool CTxDB::UpdateSpentIndex(const std::vector<std::pair<CSpentIndexKey, CSpentIndexValue> >&vect) {
+    for (std::vector<std::pair<CSpentIndexKey,CSpentIndexValue> >::const_iterator it=vect.begin(); it!=vect.end(); it++) {
+        if (it->second.IsNull()) {
+            Erase(std::make_pair(string("spentIndex"), it->first));
+        } else {
+            Write(std::make_pair(string("spentIndex"), it->first), it->second);
+        }
+    }
+    return true;
+}
+bool CTxDB::UpdateAddressUnspentIndex(const std::vector<std::pair<CAddressUnspentKey, CAddressUnspentValue > >&vect) {
+    for (std::vector<std::pair<CAddressUnspentKey, CAddressUnspentValue> >::const_iterator it=vect.begin(); it!=vect.end(); it++) {
+        if (it->second.IsNull()) {
+            Erase(std::make_pair(string("addressUnspentIndex"), it->first));
+        } else {
+            Write(std::make_pair(string("addressUnspentIndex"), it->first), it->second);
+        }
+    }
+    return true;
+}
+bool CTxDB::ReadAddressUnspentIndex(uint160 addressHash, int type,
+                                           std::vector<std::pair<CAddressUnspentKey, CAddressUnspentValue> > &unspentOutputs) {
+    leveldb::Iterator *pcursor = pdb->NewIterator(GetReadOptions());
+    CDataStream ssStartKey(SER_DISK, CLIENT_VERSION);
+    ssStartKey << std::make_pair(string("addressUnspentIndex"), CAddressIndexIteratorKey(type, addressHash));
+    pcursor->Seek(ssStartKey.str());
+    while (pcursor->Valid()) {
+        boost::this_thread::interruption_point();
+        CDataStream ssKey(SER_DISK, CLIENT_VERSION);
+        ssKey.write(pcursor->key().data(), pcursor->key().size());
+        CDataStream ssValue(SER_DISK, CLIENT_VERSION);
+        ssValue.write(pcursor->value().data(), pcursor->value().size());
+
+        string strType;
+        ssKey >> strType;
+        if (strType != "addressUnspentIndex")
+            break;
+
+        CAddressUnspentKey USKey;
+        ssKey >> USKey;
+        if (USKey.hashBytes != addressHash)
+            break;
+
+        CAddressUnspentValue USValue;
+        ssValue >> USValue;
+
+        unspentOutputs.push_back(std::make_pair(USKey, USValue));
+
+        pcursor->Next();
+    }
+    return true;
+}
+bool CTxDB::WriteAddressIndex(const std::vector<std::pair<CAddressIndexKey, int64_t > >&vect) {
+    for (std::vector<std::pair<CAddressIndexKey, int64_t> >::const_iterator it=vect.begin(); it!=vect.end(); it++)
+    Write(std::make_pair(string("addressIndex"), it->first), it->second);
+    return true;
+}
+bool CTxDB::EraseAddressIndex(const std::vector<std::pair<CAddressIndexKey, int64_t > >&vect) {
+    for (std::vector<std::pair<CAddressIndexKey, int64_t> >::const_iterator it=vect.begin(); it!=vect.end(); it++)
+    Erase(std::make_pair(string("addressIndex"), it->first));
+    return true;
+}
+bool CTxDB::ReadAddressIndex(uint160 addressHash, int type,
+                                    std::vector<std::pair<CAddressIndexKey, int64_t> > &addressIndex,
+                                    int start, int end) {
+    leveldb::Iterator *pcursor = pdb->NewIterator(GetReadOptions());
+    CDataStream ssStartKey(SER_DISK, CLIENT_VERSION);
+    if (start > 0 && end > 0) {
+        ssStartKey << std::make_pair(string("addressIndex"), CAddressIndexIteratorHeightKey(type, addressHash, start));
+        pcursor->Seek(ssStartKey.str());
+    } else {
+        ssStartKey << std::make_pair(string("addressIndex"), CAddressIndexIteratorKey(type, addressHash));
+        pcursor->Seek(ssStartKey.str());
+    }
+    while (pcursor->Valid()) {
+        boost::this_thread::interruption_point();
+
+        CDataStream ssKey(SER_DISK, CLIENT_VERSION);
+        ssKey.write(pcursor->key().data(), pcursor->key().size());
+        CDataStream ssValue(SER_DISK, CLIENT_VERSION);
+        ssValue.write(pcursor->value().data(), pcursor->value().size());
+
+        string strType;
+        ssKey >> strType;
+        if (strType != "addressIndex")
+            break;
+
+        CAddressIndexKey indexKey;
+        ssKey >> indexKey;
+        if (indexKey.hashBytes != addressHash)
+            break;
+
+        if (end > 0 && indexKey.blockHeight > end)
+            break;
+
+        int64_t amount;
+        ssValue >> amount;
+
+        addressIndex.push_back(std::make_pair(indexKey, amount));
+        pcursor->Next();
+    }
+    return true;
+}
+bool CTxDB::WriteTimestampIndex(const CTimestampIndexKey &timestampIndex) {
+
+    return Write(std::make_pair(string("timestampIndex"), timestampIndex), 0);
+}
+bool CTxDB::ReadTimestampIndex(const unsigned int &high, const unsigned int &low, const bool fActiveOnly, std::vector<std::pair<uint256, unsigned int> > &hashes) {
+    leveldb::Iterator *pcursor = pdb->NewIterator(GetReadOptions());
+    CDataStream ssStartKey(SER_DISK, CLIENT_VERSION);
+    ssStartKey << std::make_pair(string("timestampIndex"), CTimestampIndexIteratorKey(low));
+    pcursor->Seek(ssStartKey.str());
+    while (pcursor->Valid()) {
+        boost::this_thread::interruption_point();
+
+        CDataStream ssKey(SER_DISK, CLIENT_VERSION);
+        ssKey.write(pcursor->key().data(), pcursor->key().size());
+        CDataStream ssValue(SER_DISK, CLIENT_VERSION);
+        ssValue.write(pcursor->value().data(), pcursor->value().size());
+
+        string strType;
+        ssKey >> strType;
+        if (strType != "timestampIndex")
+            break;
+
+        CTimestampIndexKey key;
+        ssKey >> key;
+        if (key.timestamp >= high)
+            break;
+
+        hashes.push_back(std::make_pair(key.blockHash, key.timestamp));
+
+        pcursor->Next();
+    }
+    return true;
+}
+bool CTxDB::WriteTimestampBlockIndex(const CTimestampBlockIndexKey &blockhashIndex, const CTimestampBlockIndexValue &logicalts) {
+    return Write(std::make_pair(string("blockhashIndex"), blockhashIndex), logicalts);
+}
+bool CTxDB::ReadTimestampBlockIndex(const uint256 &hash, unsigned int &ltimestamp) {
+    CTimestampBlockIndexValue(lts);
+    if (!Read(std::make_pair(string("blockhashIndex"), hash), lts))
+        return false;
+    ltimestamp = lts.ltimestamp;
+    return true;
+}
+
+//
 
 bool CTxDB::ReadBestInvalidTrust(CBigNum& bnBestInvalidTrust)
 {

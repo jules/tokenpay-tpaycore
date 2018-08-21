@@ -8,6 +8,7 @@
 
 #include "uint256.h"
 #include "rpcprotocol.h"
+#include "main.h"
 
 #include <list>
 #include <map>
@@ -119,6 +120,8 @@ extern uint256 ParseHashV(const json_spirit::Value& v, std::string strName);
 extern uint256 ParseHashO(const json_spirit::Object& o, std::string strKey);
 extern std::vector<unsigned char> ParseHexV(const json_spirit::Value& v, std::string strName);
 extern std::vector<unsigned char> ParseHexO(const json_spirit::Object& o, std::string strKey);
+
+extern json_spirit::Object blockToDeltasJSON(const CBlock& block, const CBlockIndex* blockindex);
 
 extern json_spirit::Value getconnectioncount(const json_spirit::Array& params, bool fHelp); // in rpcnet.cpp
 extern json_spirit::Value getpeerinfo(const json_spirit::Array& params, bool fHelp);
@@ -244,5 +247,15 @@ extern json_spirit::Value thinforcestate(const json_spirit::Array& params, bool 
 
 extern json_spirit::Value extkey(const json_spirit::Array& params, bool fHelp);
 extern json_spirit::Value mnemonic(const json_spirit::Array& params, bool fHelp);
+
+extern json_spirit::Value getblockdeltas(const json_spirit::Array& params, bool fHelp);
+extern json_spirit::Value getblockhashes(const json_spirit::Array& params, bool fHelp);
+extern json_spirit::Value getaddressmempool(const json_spirit::Array& params, bool fHelp);
+extern json_spirit::Value getaddressutxos(const json_spirit::Array& params, bool fHelp);
+extern json_spirit::Value getaddressdeltas(const json_spirit::Array& params, bool fHelp);
+extern json_spirit::Value getaddressbalance(const json_spirit::Array& params, bool fHelp);
+extern json_spirit::Value getaddresstxids(const json_spirit::Array& params, bool fHelp);
+extern json_spirit::Value getspentinfo(const json_spirit::Array& params, bool fHelp);
+extern json_spirit::Value getblockchaininfo(const json_spirit::Array& params, bool fHelp);
 
 #endif

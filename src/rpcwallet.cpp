@@ -12,6 +12,7 @@
 #include "stealth.h"
 #include "ringsig.h"
 #include "smessage.h"
+#include "checkpoints.h"
 #include <sstream>
 
 using namespace json_spirit;
@@ -19,7 +20,7 @@ using namespace json_spirit;
 int64_t nWalletUnlockTime;
 static CCriticalSection cs_nWalletUnlockTime;
 
-extern void TxToJSON(const CTransaction& tx, const uint256 hashBlock, json_spirit::Object& entry);
+extern void TxToJSON(const CTransaction& tx, const uint256 hashBlock, json_spirit::Object& entry, bool expanded);
 
 static void accountingDeprecationCheck()
 {
@@ -1493,7 +1494,7 @@ Value gettransaction(const Array& params, bool fHelp)
     {
         const CWalletTx& wtx = pwalletMain->mapWallet[hash];
 
-        TxToJSON(wtx, 0, entry);
+        TxToJSON(wtx, 0, entry, false);
 
         int64_t nCredit = wtx.GetCredit();
         int64_t nDebit = wtx.GetDebit();
@@ -1515,7 +1516,7 @@ Value gettransaction(const Array& params, bool fHelp)
         uint256 hashBlock = 0;
         if (GetTransaction(hash, tx, hashBlock))
         {
-            TxToJSON(tx, 0, entry);
+            TxToJSON(tx, 0, entry, false);
             if (hashBlock == 0)
             {
                 entry.push_back(Pair("confirmations", 0));
@@ -3210,4 +3211,461 @@ Value txnreport(const Array& params, bool fHelp)
     return result;
 }
 
+bool getAddressFromIndex(const int &type, const uint160 &hash, std::string &address)
+{
+    if (type == 2) {
+        address = CBitcoinAddress(CScriptID(hash)).ToString();
+    } else if (type == 1) {
+        address = CBitcoinAddress(CKeyID(hash)).ToString();
+    } else {
+        return false;
+    }
+    return true;
+}
 
+bool getAddressesFromParams(const Array& params, std::vector<std::pair<uint160, int> > &addresses)
+{
+    if (params[0].type() == obj_type) {
+        Value addressArray = find_value(params[0].get_obj(), "addresses");
+        Array addressValues = addressArray.get_array();
+        for (int i = 0; i < (int)addressValues.size(); i++)
+        {
+            CBitcoinAddress address = addressValues[i].get_str();
+            uint160 hashBytes;
+            int type = 0;
+            if (!address.GetIndexKey(hashBytes, type)) {
+                throw std::runtime_error("GetIndexKey failed");
+            }
+            addresses.push_back(std::make_pair(hashBytes, type));
+        }
+    } else if (params[0].type() == str_type) {
+        CBitcoinAddress address(params[0].get_str());
+        uint160 hashBytes;
+        int type = 0;
+        if (!address.GetIndexKey(hashBytes, type)) {
+            throw std::runtime_error("Invalid address");
+        }
+        addresses.push_back(std::make_pair(hashBytes, type));
+    }
+    else {
+        throw std::runtime_error("Invalid address");
+    }
+    return true;
+}
+
+bool heightSort(std::pair<CAddressUnspentKey, CAddressUnspentValue> a,
+                std::pair<CAddressUnspentKey, CAddressUnspentValue> b) {
+    return a.second.blockHeight < b.second.blockHeight;
+}
+
+bool timestampSort(std::pair<CMempoolAddressDeltaKey, CMempoolAddressDelta> a,
+                   std::pair<CMempoolAddressDeltaKey, CMempoolAddressDelta> b) {
+    return a.second.time < b.second.time;
+}
+
+Value getaddressmempool(const Array& params, bool fHelp)
+{
+    if (fHelp || params.size() != 1)
+        throw std::runtime_error(
+                "getaddressmempool\n"
+                "\nReturns all mempool deltas for an address (requires addressindex to be enabled).\n"
+                "\nArguments:\n"
+                "{\n"
+                "  \"addresses\"\n"
+                "    [\n"
+                "      \"address\"  (string) The base58check encoded address\n"
+                "      ,...\n"
+                "    ]\n"
+                "}\n"
+                "\nResult:\n"
+                "[\n"
+                "  {\n"
+                "    \"address\"  (string) The base58check encoded address\n"
+                "    \"txid\"  (string) The related txid\n"
+                "    \"index\"  (number) The related input or output index\n"
+                "    \"satoshis\"  (number) The difference of satoshis\n"
+                "    \"timestamp\"  (number) The time the transaction entered the mempool (seconds)\n"
+                "    \"prevtxid\"  (string) The previous txid (if spending)\n"
+                "    \"prevout\"  (string) The previous transaction output index (if spending)\n"
+                "  }\n"
+                "]\n"
+        );
+    std::vector<std::pair<uint160, int> > addresses;
+    if (!getAddressesFromParams(params, addresses)) {
+        throw std::runtime_error("Invalid address");
+    }
+    std::vector<std::pair<CMempoolAddressDeltaKey, CMempoolAddressDelta> > indexes;
+    if (!mempool.getAddressIndex(addresses, indexes)) {
+        throw std::runtime_error("No information available for address");
+    }
+    std::sort(indexes.begin(), indexes.end(), timestampSort);
+    Array result;
+    for (std::vector<std::pair<CMempoolAddressDeltaKey, CMempoolAddressDelta> >::iterator it = indexes.begin();
+            it != indexes.end(); it++) {
+        std::string address;
+        if (!getAddressFromIndex(it->first.type, it->first.addressBytes, address)) {
+            throw std::runtime_error("Unknown address type");
+        }
+        Object delta;
+        delta.push_back(Pair("address", address));
+        delta.push_back(Pair("txid", it->first.txhash.GetHex()));
+        delta.push_back(Pair("index", (int)it->first.index));
+        delta.push_back(Pair("satoshis", it->second.amount));
+        delta.push_back(Pair("timestamp", it->second.time));
+        if (it->second.amount < 0) {
+            delta.push_back(Pair("prevtxid", it->second.prevhash.GetHex()));
+            delta.push_back(Pair("prevout", (int)it->second.prevout));
+        }
+        result.push_back(delta);
+    }
+    return result;
+}
+Value getaddressutxos(const Array& params, bool fHelp)
+{
+    if (fHelp || params.size() != 1)
+        throw std::runtime_error(
+                "getaddressutxos\n"
+                "\nReturns all unspent outputs for an address (requires addressindex to be enabled).\n"
+                "\nArguments:\n"
+                "{\n"
+                "  \"addresses\"\n"
+                "    [\n"
+                "      \"address\"  (string) The base58check encoded address\n"
+                "      ,...\n"
+                "    ],\n"
+                "  \"chainInfo\"  (boolean) Include chain info with results\n"
+                "}\n"
+                "\nResult\n"
+                "[\n"
+                "  {\n"
+                "    \"address\"  (string) The address base58check encoded\n"
+                "    \"txid\"  (string) The output txid\n"
+                "    \"height\"  (number) The block height\n"
+                "    \"outputIndex\"  (number) The output index\n"
+                "    \"script\"  (strin) The script hex encoded\n"
+                "    \"satoshis\"  (number) The number of satoshis of the output\n"
+                "  }\n"
+                "]\n"
+        );
+
+    bool includeChainInfo = false;
+    if (params[0].type() == obj_type)
+    {
+        Value chainInfo = find_value(params[0].get_obj(), "chainInfo");
+        if (chainInfo.type() == bool_type)
+        {
+            includeChainInfo = chainInfo.get_bool();
+        }
+    }
+
+    std::vector<std::pair<uint160, int> > addresses;
+    if (!getAddressesFromParams(params, addresses)) {
+        throw std::runtime_error("Invalid address");
+    }
+    std::vector<std::pair<CAddressUnspentKey, CAddressUnspentValue> > unspentOutputs;
+    for (std::vector<std::pair<uint160, int> >::iterator it = addresses.begin(); it != addresses.end(); it++) {
+        if (!GetAddressUnspent((*it).first, (*it).second, unspentOutputs)) {
+            throw std::runtime_error("No information available for address");
+        }
+    }
+    std::sort(unspentOutputs.begin(), unspentOutputs.end(), heightSort);
+    Array utxos;
+    for (std::vector<std::pair<CAddressUnspentKey, CAddressUnspentValue> >::const_iterator it=unspentOutputs.begin(); it!=unspentOutputs.end(); it++) {
+        Object output;
+        std::string address;
+        if (!getAddressFromIndex(it->first.type, it->first.hashBytes, address)) {
+            throw std::runtime_error("Unknown address type");
+        }
+        output.push_back(Pair("address", address));
+        output.push_back(Pair("txid", it->first.txhash.GetHex()));
+        output.push_back(Pair("outputIndex", (int)it->first.index));
+        output.push_back(Pair("script", HexStr(it->second.script.begin(), it->second.script.end())));
+        output.push_back(Pair("satoshis", it->second.satoshis));
+        output.push_back(Pair("height", it->second.blockHeight));
+        utxos.push_back(output);
+    }
+    if (includeChainInfo) {
+        Object result;
+        result.push_back(Pair("utxos", utxos));
+        LOCK(cs_main);
+        result.push_back(Pair("hash", pindexBest->GetBlockHash().GetHex()));
+        result.push_back(Pair("height", pindexBest->nHeight));
+        return result;
+    } else {
+        return utxos;
+    }
+}
+Value getaddressdeltas(const Array& params, bool fHelp)
+{
+    if (fHelp || params.size() != 1 )
+        throw std::runtime_error(
+                "getaddressdeltas\n"
+                "\nReturns all changes for an address (requires addressindex to be enabled).\n"
+                "\nArguments:\n"
+                "{\n"
+                "  \"addresses\"\n"
+                "    [\n"
+                "      \"address\"  (string) The base58check encoded address\n"
+                "      ,...\n"
+                "    ]\n"
+                "  \"start\" (number) The start block height\n"
+                "  \"end\" (number) The end block height\n"
+                "  \"chainInfo\" (boolean) Include chain info in results, only applies if start and end specified\n"
+                "}\n"
+                "\nResult:\n"
+                "[\n"
+                "  {\n"
+                "    \"satoshis\"  (number) The difference of satoshis\n"
+                "    \"txid\"  (string) The related txid\n"
+                "    \"index\"  (number) The related input or output index\n"
+                "    \"height\"  (number) The block height\n"
+                "    \"address\"  (string) The base58check encoded address\n"
+                "  }\n"
+                "]\n"
+        );
+    Value startValue = find_value(params[0].get_obj(), "start");
+    Value endValue = find_value(params[0].get_obj(), "end");
+
+    Value chainInfo = find_value(params[0].get_obj(), "chainInfo");
+    bool includeChainInfo = false;
+    if (chainInfo.type() == bool_type)
+    {
+        includeChainInfo = chainInfo.get_bool();
+    }
+
+    int start = 0;
+    int end = 0;
+    if (startValue.type() == int_type && endValue.type() == int_type)
+    {
+        start = startValue.get_int();
+        end = endValue.get_int();
+        if (start <= 0 || end <= 0) {
+            throw std::runtime_error("Start and end is expected to be greater than zero");
+        }
+        if (end < start) {
+            throw std::runtime_error("End value is expected to be greater than start");
+        }
+    }
+
+
+    std::vector<std::pair<uint160, int> > addresses;
+    if (!getAddressesFromParams(params, addresses)) {
+        throw std::runtime_error("Invalid address");
+    }
+    std::vector<std::pair<CAddressIndexKey, int64_t> > addressIndex;
+    for (std::vector<std::pair<uint160, int> >::iterator it = addresses.begin(); it != addresses.end(); it++) {
+        if (start > 0 && end > 0) {
+            if (!GetAddressIndex((*it).first, (*it).second, addressIndex, start, end)) {
+                throw std::runtime_error("No information available for address");
+            }
+        } else {
+            if (!GetAddressIndex((*it).first, (*it).second, addressIndex)) {
+                throw std::runtime_error("No information available for address");
+            }
+        }
+    }
+    Array deltas;
+    for (std::vector<std::pair<CAddressIndexKey, int64_t> >::const_iterator it=addressIndex.begin(); it!=addressIndex.end(); it++) {
+        std::string address;
+        if (!getAddressFromIndex(it->first.type, it->first.hashBytes, address)) {
+            throw std::runtime_error("Unknown address type");
+        }
+        Object delta;
+        delta.push_back(Pair("satoshis", it->second));
+        delta.push_back(Pair("txid", it->first.txhash.GetHex()));
+        delta.push_back(Pair("index", (int)it->first.index));
+        delta.push_back(Pair("blockindex", (int)it->first.txindex));
+        delta.push_back(Pair("height", it->first.blockHeight));
+        delta.push_back(Pair("address", address));
+        deltas.push_back(delta);
+    }
+    Object result;
+    if (includeChainInfo && start > 0 && end > 0) {
+        LOCK(cs_main);
+        if (start > pindexBest->nHeight || end > pindexBest->nHeight ) {
+            throw std::runtime_error("Start or end is outside chain range");
+        }
+        CBlockIndex* startIndex = mapBlockIndex[hashBestChain];
+        while (startIndex->nHeight > start)
+            startIndex = startIndex->pprev;
+
+        CBlockIndex* endIndex = mapBlockIndex[hashBestChain];
+        while (endIndex->nHeight > end)
+            endIndex = endIndex->pprev;
+
+        Object startInfo;
+        Object endInfo;
+        startInfo.push_back(Pair("hash", startIndex->GetBlockHash().GetHex()));
+        startInfo.push_back(Pair("height", start));
+        endInfo.push_back(Pair("hash", endIndex->GetBlockHash().GetHex()));
+        endInfo.push_back(Pair("height", end));
+        result.push_back(Pair("deltas", deltas));
+        result.push_back(Pair("start", startInfo));
+        result.push_back(Pair("end", endInfo));
+        return result;
+    } else {
+        return deltas;
+    }
+}
+Value getaddressbalance(const Array& params, bool fHelp)
+{
+    if (fHelp || params.size() != 1)
+        throw std::runtime_error(
+                "getaddressbalance\n"
+                "\nReturns the balance for an address(es) (requires addressindex to be enabled).\n"
+                "\nArguments:\n"
+                "{\n"
+                "  \"addresses\"\n"
+                "    [\n"
+                "      \"address\"  (string) The base58check encoded address\n"
+                "      ,...\n"
+                "    ]\n"
+                "}\n"
+                "\nResult:\n"
+                "{\n"
+                "  \"balance\"  (string) The current balance in satoshis\n"
+                "  \"received\"  (string) The total number of satoshis received (including change)\n"
+                "}\n"
+        );
+    std::vector<std::pair<uint160, int> > addresses;
+    if (!getAddressesFromParams(params, addresses)) {
+        throw std::runtime_error("Invalid address");
+    }
+    std::vector<std::pair<CAddressIndexKey, int64_t> > addressIndex;
+    for (std::vector<std::pair<uint160, int> >::iterator it = addresses.begin(); it != addresses.end(); it++) {
+        if (!GetAddressIndex((*it).first, (*it).second, addressIndex)) {
+            throw std::runtime_error("No information available for address");
+        }
+    }
+    int64_t balance = 0;
+    int64_t received = 0;
+    for (std::vector<std::pair<CAddressIndexKey, int64_t> >::const_iterator it=addressIndex.begin(); it!=addressIndex.end(); it++) {
+        if (it->second > 0) {
+            received += it->second;
+        }
+        balance += it->second;
+    }
+    Object result;
+    result.push_back(Pair("balance", balance));
+    result.push_back(Pair("received", received));
+    return result;
+}
+Value getaddresstxids(const Array& params, bool fHelp)
+{
+    if (fHelp || params.size() != 1)
+        throw std::runtime_error(
+                "getaddresstxids\n"
+                "\nReturns the txids for an address(es) (requires addressindex to be enabled).\n"
+                "\nArguments:\n"
+                "{\n"
+                "  \"addresses\"\n"
+                "    [\n"
+                "      \"address\"  (string) The base58check encoded address\n"
+                "      ,...\n"
+                "    ]\n"
+                "  \"start\" (number) The start block height\n"
+                "  \"end\" (number) The end block height\n"
+                "}\n"
+                "\nResult:\n"
+                "[\n"
+                "  \"transactionid\"  (string) The transaction id\n"
+                "  ,...\n"
+                "]\n"
+        );
+    std::vector<std::pair<uint160, int> > addresses;
+    if (!getAddressesFromParams(params, addresses)) {
+        throw std::runtime_error("Invalid address");
+    }
+    int start = 0;
+    int end = 0;
+    if (params[0].type() == obj_type)
+    {
+        Value startValue = find_value(params[0].get_obj(), "start");
+        Value endValue = find_value(params[0].get_obj(), "end");
+        if (startValue == int_type && endValue == int_type)
+        {
+            start = startValue.get_int();
+            end = endValue.get_int();
+        }
+    }
+
+    std::vector<std::pair<CAddressIndexKey, int64_t> > addressIndex;
+
+    for (std::vector<std::pair<uint160, int> >::iterator it = addresses.begin(); it != addresses.end(); it++) {
+        if (start > 0 && end > 0) {
+            if (!GetAddressIndex((*it).first, (*it).second, addressIndex, start, end)) {
+                throw std::runtime_error("No information available for address");
+            }
+        } else {
+            if (!GetAddressIndex((*it).first, (*it).second, addressIndex)) {
+                throw std::runtime_error("No information available for address");
+            }
+        }
+    }
+    std::set<std::pair<int, std::string> > txids;
+    Array result;
+    for (std::vector<std::pair<CAddressIndexKey, int64_t> >::const_iterator it=addressIndex.begin(); it!=addressIndex.end(); it++) {
+        int height = it->first.blockHeight;
+        std::string txid = it->first.txhash.GetHex();
+        if (addresses.size() > 1) {
+            txids.insert(std::make_pair(height, txid));
+        } else {
+            if (txids.insert(std::make_pair(height, txid)).second) {
+                result.push_back(txid);
+            }
+        }
+    }
+    if (addresses.size() > 1) {
+        for (std::set<std::pair<int, std::string> >::const_iterator it=txids.begin(); it!=txids.end(); it++) {
+            result.push_back(it->second);
+        }
+    }
+    return result;
+}
+Value getspentinfo(const Array& params, bool fHelp)
+{
+    if (fHelp || params.size() != 1 )
+        throw std::runtime_error(
+                "getspentinfo\n"
+                "\nReturns the txid and index where an output is spent.\n"
+                "\nArguments:\n"
+                "{\n"
+                "  \"txid\" (string) The hex string of the txid\n"
+                "  \"index\" (number) The start block height\n"
+                "}\n"
+                "\nResult:\n"
+                "{\n"
+                "  \"txid\"  (string) The transaction id\n"
+                "  \"index\"  (number) The spending input index\n"
+                "  ,...\n"
+                "}\n"
+        );
+    Value txidValue = find_value(params[0].get_obj(), "txid");
+    Value indexValue = find_value(params[0].get_obj(), "index");
+    if (txidValue.type() != str_type || indexValue.type() != int_type) {
+        throw std::runtime_error("Invalid txid or index");
+    }
+    uint256 txid = ParseHashV(txidValue, "txid");
+    int outputIndex = indexValue.get_int();
+    CSpentIndexKey key(txid, outputIndex);
+    CSpentIndexValue value;
+    if (!GetSpentIndex(key, value)) {
+        throw std::runtime_error("Unable to get spent info");
+    }
+    Object obj;
+    obj.push_back(Pair("txid", value.txid.GetHex()));
+    obj.push_back(Pair("index", (int)value.inputIndex));
+    obj.push_back(Pair("height", value.blockHeight));
+    return obj;
+}
+
+Value getblockchaininfo(const Array& params, bool fHelp)
+{
+    //Currently just for tpaycore verification progress
+
+    LOCK(cs_main);
+    Object obj;
+    int nTotalBlocks = (Checkpoints::GetTotalBlocksEstimate() - pwalletMain->nLastFilteredHeight);
+    obj.push_back(Pair("verificationprogress", nTotalBlocks));
+    return obj;
+}

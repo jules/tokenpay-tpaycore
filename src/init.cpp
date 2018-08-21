@@ -465,6 +465,19 @@ bool AppInit2(boost::thread_group& threadGroup)
         // when only connecting to trusted nodes, do not seed via .onion, or listen by default
         SoftSetBoolArg("-onionseed", false);
     }
+
+    if (fAddressIndex != GetBoolArg("-addressindex", DEFAULT_ADDRESSINDEX))
+    {
+        return InitError("You need to rebuild the database using -reindex-chainstate to change -addressindex");
+    }
+
+    if (fSpentIndex != GetBoolArg("-spentindex", DEFAULT_SPENTINDEX)) {
+        return InitError("You need to rebuild the database using -reindex-chainstate to change -spentindex");
+    }
+
+    if (fTimestampIndex != GetBoolArg("-timestampindex", DEFAULT_TIMESTAMPINDEX)) {
+        return InitError("You need to rebuild the database using -reindex-chainstate to change -timestampindex");
+    }
     
     if (GetBoolArg("-salvagewallet"))
     {

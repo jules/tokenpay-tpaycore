@@ -6,6 +6,8 @@
 #define BITCOIN_TXMEMPOOL_H
 
 #include "core.h"
+#include "addressindex.h"
+#include "spentindex.h"
 
 /*
  * CTxMemPool stores valid-according-to-the-current-best-chain
@@ -27,6 +29,15 @@ public:
     std::map<COutPoint, CInPoint> mapNextTx;
     
     std::map<std::vector<uint8_t>, CKeyImageSpent> mapKeyImage;
+
+    typedef std::map<CMempoolAddressDeltaKey, CMempoolAddressDelta, CMempoolAddressDeltaKeyCompare> addressDeltaMap;
+    addressDeltaMap mapAddress;
+    typedef std::map<uint256, std::vector<CMempoolAddressDeltaKey> > addressDeltaMapInserted;
+    addressDeltaMapInserted mapAddressInserted;
+    typedef std::map<CSpentIndexKey, CSpentIndexValue, CSpentIndexKeyCompare> mapSpentIndex;
+    mapSpentIndex mapSpent;
+    typedef std::map<uint256, std::vector<CSpentIndexKey> > mapSpentIndexInserted;
+    mapSpentIndexInserted mapSpentInserted;
     
     
     CTxMemPool()
@@ -39,6 +50,14 @@ public:
     bool removeConflicts(const CTransaction &tx);
     void clear();
     void queryHashes(std::vector<uint256>& vtxid);
+
+    void addAddressIndex(const CTransaction& tx, int64_t nTime);
+    bool getAddressIndex(std::vector<std::pair<uint160, int> > &addresses,
+                         std::vector<std::pair<CMempoolAddressDeltaKey, CMempoolAddressDelta> > &results);
+    bool removeAddressIndex(const uint256 txhash);
+    void addSpentIndex(const CTransaction& tx);
+    bool getSpentIndex(CSpentIndexKey &key, CSpentIndexValue &value);
+    bool removeSpentIndex(const uint256 txhash);
     
     unsigned int GetTransactionsUpdated() const
     {
