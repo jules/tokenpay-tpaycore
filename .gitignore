@@ -48,5 +48,6 @@ ar-lib
 compile
 libtool
 ltmain.sh
+.idea
 
 !db4.8/build_unix/configure
