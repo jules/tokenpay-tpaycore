@@ -6,7 +6,7 @@
 #ifndef RAVEN_COMPAT_ENDIAN_H
 #define RAVEN_COMPAT_ENDIAN_H
 
-#include "byteswap.h"
+#include "compatbyteswap.h"
 
 #include <stdint.h>
 

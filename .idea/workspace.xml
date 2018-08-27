@@ -10,7 +10,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2727f27d-f57b-4cc6-b4b1-a22bdf040fd4" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -23,19 +23,10 @@
     <splitter split-orientation="horizontal" split-proportion="0.5">
       <split-first>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="txdb-leveldb.cpp" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/txdb-leveldb.cpp">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="12735">
-                  <caret line="849" column="32" selection-start-line="849" selection-start-column="32" selection-end-line="849" selection-end-column="32" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="rpcwallet.cpp" pinned="false" current-in-tab="true">
+          <file leaf-file-name="rpcwallet.cpp" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/rpcwallet.cpp">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="729">
+                <state relative-caret-position="48645">
                   <caret line="3243" column="21" selection-start-line="3243" selection-start-column="21" selection-end-line="3243" selection-end-column="21" />
                 </state>
               </provider>
@@ -44,8 +35,8 @@
           <file leaf-file-name="rpcclient.cpp" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/rpcclient.cpp">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="3450">
-                  <caret line="230" selection-start-line="230" selection-end-line="230" />
+                <state relative-caret-position="405">
+                  <caret line="27" column="20" selection-start-line="27" selection-start-column="20" selection-end-line="27" selection-end-column="20" />
                 </state>
               </provider>
             </entry>
@@ -59,56 +50,42 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="rpcserver.cpp" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/rpcserver.cpp">
+          <file leaf-file-name="endian.h" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/src/endian.h">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="6090">
-                  <caret line="406" column="22" selection-start-line="406" selection-start-column="22" selection-end-line="406" selection-end-column="22" />
+                <state relative-caret-position="360">
+                  <caret line="24" column="1" selection-start-line="24" selection-start-column="1" selection-end-line="24" selection-end-column="1" />
+                  <folding>
+                    <element signature="e#375#394#0" expanded="true" />
+                    <element signature="e#428#451#0" expanded="true" />
+                  </folding>
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="txmempool.cpp" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/txmempool.cpp">
+          <file leaf-file-name="byteswap.h" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/byteswap.h">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="3540">
-                  <caret line="236" column="36" selection-start-line="236" selection-start-column="36" selection-end-line="236" selection-end-column="36" />
+                <state relative-caret-position="165">
+                  <caret line="11" selection-start-line="11" selection-end-line="11" />
                   <folding>
-                    <element signature="e#238#260#0" expanded="true" />
+                    <element signature="e#358#379#0" expanded="true" />
+                    <element signature="e#412#866#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="rpcprotocol.cpp" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/rpcprotocol.cpp">
+              <provider selected="true" editor-type-id="text-editor" />
             </entry>
           </file>
           <file leaf-file-name="rpcserver.h" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/rpcserver.h">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="3870">
-                  <caret line="258" column="90" selection-start-line="258" selection-start-column="90" selection-end-line="258" selection-end-column="90" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="serialize.h" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/serialize.h">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="10410">
-                  <caret line="697" column="44" selection-start-line="697" selection-start-column="44" selection-end-line="697" selection-end-column="44" />
-                  <folding>
-                    <element signature="e#563#586#0" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="spentindex.h" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/spentindex.h">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="210">
-                  <caret line="15" column="5" selection-start-line="15" selection-start-column="5" selection-end-line="15" selection-end-column="5" />
-                  <folding>
-                    <element signature="e#294#314#0" expanded="true" />
-                  </folding>
+                <state relative-caret-position="135">
+                  <caret line="9" column="18" selection-start-line="9" selection-start-column="18" selection-end-line="9" selection-end-column="18" />
                 </state>
               </provider>
             </entry>
@@ -117,33 +94,6 @@
       </split-first>
       <split-second>
         <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="rpcblockchain.cpp" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/rpcblockchain.cpp">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="3675">
-                  <caret line="245" column="72" selection-start-line="245" selection-start-column="72" selection-end-line="245" selection-end-column="72" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="rpcrawtransaction.cpp" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/rpcrawtransaction.cpp">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="15">
-                  <caret line="367" column="5" selection-start-line="367" selection-start-column="5" selection-end-line="367" selection-end-column="5" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/.gitignore">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="750">
-                  <caret line="50" column="5" selection-start-line="50" selection-start-column="5" selection-end-line="50" selection-end-column="5" />
-                </state>
-              </provider>
-            </entry>
-          </file>
           <file leaf-file-name="txdb-leveldb.h" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/txdb-leveldb.h">
               <provider selected="true" editor-type-id="text-editor">
@@ -153,31 +103,88 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="uint256.h" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/uint256.h">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="5925">
-                  <caret line="395" column="36" selection-start-line="395" selection-start-column="36" selection-end-line="395" selection-end-column="36" />
-                </state>
-              </provider>
-            </entry>
-          </file>
           <file leaf-file-name="init.cpp" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/init.cpp">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="5625">
-                  <caret line="379" column="27" selection-start-line="379" selection-start-column="27" selection-end-line="379" selection-end-column="27" />
+                <state relative-caret-position="15">
+                  <caret line="28" selection-start-line="28" selection-end-line="28" />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="net.cpp" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/net.cpp">
+          <file leaf-file-name="main.h" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/main.h">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="11640">
-                  <caret line="781" column="24" selection-start-line="781" selection-start-column="5" selection-end-line="781" selection-end-column="24" />
+                <state relative-caret-position="2160">
+                  <caret line="144" column="69" selection-start-line="144" selection-start-column="69" selection-end-line="144" selection-end-column="69" />
                 </state>
               </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="Makefile.am" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/Makefile.am">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="-825">
+                  <caret line="154" column="37" selection-start-line="154" selection-start-column="35" selection-end-line="154" selection-end-column="37" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="addressindex.h" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/addressindex.h">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="120">
+                  <caret line="8" column="9" lean-forward="true" selection-start-line="8" selection-start-column="9" selection-end-line="8" selection-end-column="9" />
+                  <folding>
+                    <element signature="e#304#324#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="addrman.cpp" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/addrman.cpp">
+              <provider selected="true" editor-type-id="text-editor" />
+            </entry>
+          </file>
+          <file leaf-file-name="build-unix.txt" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/doc/build-unix.txt">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="495">
+                  <caret line="33" selection-start-line="33" selection-end-line="37" selection-end-column="72" />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="compat.h" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/compat.h">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="120">
+                  <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+                  <folding>
+                    <element signature="e#305#515#0" expanded="true" />
+                    <element signature="e#764#846#0" expanded="true" />
+                    <element signature="e#1406#1437#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="rpcprotocol.h" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/rpcprotocol.h">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="270">
+                  <caret line="18" column="25" lean-forward="true" selection-start-line="18" selection-start-column="25" selection-end-line="18" selection-end-column="25" />
+                  <folding>
+                    <element signature="e#551#596#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="db.cpp" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/src/db.cpp">
+              <provider selected="true" editor-type-id="text-editor" />
             </entry>
           </file>
         </leaf>
@@ -186,19 +193,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>-reindex-chain</find>
-      <find>bool getboolarg</find>
-      <find>-addressindex</find>
-      <find>loadblockindex</find>
-      <find>sendtransaction</find>
-      <find>sendrawtransaction</find>
-      <find>socks</find>
-      <find>addresses found</find>
-      <find>threadonion</find>
-      <find>threadonionseed</find>
-      <find>threadsockethandler</find>
-      <find>ssl::context</find>
-      <find>-server</find>
       <find>NULL</find>
       <find>listtransactions</find>
       <find>checkkernel</find>
@@ -216,6 +210,19 @@
       <find>securemsgscanblock</find>
       <find>readdisktx</find>
       <find>cbitcoinaddress</find>
+      <find>linux</find>
+      <find>string</find>
+      <find>endian.h</find>
+      <find>boost/asio</find>
+      <find>include &quot;rpcprotocol</find>
+      <find>default_addressindex</find>
+      <find>default_add</find>
+      <find>ssliostreamdevice</find>
+      <find>class cblock</find>
+      <find>boost</find>
+      <find>big_endian</find>
+      <find>htole</find>
+      <find>.h</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -224,7 +231,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/endian.h" />
         <option value="$PROJECT_DIR$/src/byteswap.h" />
         <option value="$PROJECT_DIR$/src/serialize.h" />
         <option value="$PROJECT_DIR$/src/base58.h" />
@@ -232,7 +238,6 @@
         <option value="$PROJECT_DIR$/src/txmempool.h" />
         <option value="$PROJECT_DIR$/src/script.cpp" />
         <option value="$PROJECT_DIR$/src/script.h" />
-        <option value="$PROJECT_DIR$/src/main.h" />
         <option value="$PROJECT_DIR$/src/timestampindex.h" />
         <option value="$PROJECT_DIR$/src/spentindex.h" />
         <option value="$PROJECT_DIR$/src/addressindex.h" />
@@ -240,7 +245,6 @@
         <option value="$PROJECT_DIR$/src/rpcserver.h" />
         <option value="$PROJECT_DIR$/src/rpcserver.cpp" />
         <option value="$PROJECT_DIR$/src/rpcrawtransaction.cpp" />
-        <option value="$PROJECT_DIR$/src/init.cpp" />
         <option value="$PROJECT_DIR$/src/txdb-leveldb.cpp" />
         <option value="$USER_HOME$/Desktop/tokenpay/src/rpcclient.cpp" />
         <option value="$PROJECT_DIR$/src/rpcclient.cpp" />
@@ -248,6 +252,10 @@
         <option value="$PROJECT_DIR$/src/txmempool.cpp" />
         <option value="$PROJECT_DIR$/src/rpcwallet.cpp" />
         <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/doc/build-unix.txt" />
+        <option value="$PROJECT_DIR$/src/init.cpp" />
+        <option value="$PROJECT_DIR$/src/main.h" />
+        <option value="$PROJECT_DIR$/src/endian.h" />
       </list>
     </option>
   </component>
@@ -271,6 +279,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -281,13 +290,17 @@
             <path>
               <item name="tokenpay" type="b2602c69:ProjectViewProjectNode" />
               <item name="tokenpay" type="462c0819:PsiDirectoryNode" />
+              <item name="doc" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="tokenpay" type="b2602c69:ProjectViewProjectNode" />
+              <item name="tokenpay" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -323,18 +336,30 @@
       <workItem from="1534664866438" duration="11550000" />
       <workItem from="1534687316396" duration="10239000" />
       <workItem from="1534751055515" duration="27474000" />
-      <workItem from="1534840755235" duration="178000" />
+      <workItem from="1534840755235" duration="376000" />
+      <workItem from="1534890976574" duration="119000" />
+      <workItem from="1534927163175" duration="455000" />
+      <workItem from="1535003369814" duration="492000" />
+      <workItem from="1535019199092" duration="181000" />
+      <workItem from="1535057705435" duration="181000" />
+      <workItem from="1535113605837" duration="172000" />
+      <workItem from="1535156380609" duration="135000" />
+      <workItem from="1535183820847" duration="224000" />
+      <workItem from="1535194331081" duration="598000" />
+      <workItem from="1535214433630" duration="419000" />
+      <workItem from="1535273576320" duration="7611000" />
+      <workItem from="1535359009879" duration="2018000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="51125000" />
+    <option name="totallyTimeSpent" value="63928000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-364" y="-1600" width="2560" height="1600" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.113036625" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.11933832" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Run" order="2" />
@@ -350,7 +375,7 @@
       <window_info anchor="bottom" id="TypeScript" order="7" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info active="true" anchor="bottom" id="Find" order="1" visible="true" weight="0.32983607" />
+      <window_info anchor="bottom" id="Find" order="1" visible="true" weight="0.32983607" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -360,128 +385,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/spentindex.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1005">
-          <caret line="67" column="22" selection-start-line="67" selection-start-column="22" selection-end-line="67" selection-end-column="22" />
-          <folding>
-            <element signature="e#294#314#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/timestampindex.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="34" column="27" lean-forward="true" selection-start-line="34" selection-start-column="27" selection-end-line="34" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/txdb-leveldb.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3720">
-          <caret line="248" column="59" lean-forward="true" selection-start-line="248" selection-start-column="59" selection-end-line="248" selection-end-column="59" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/txmempool.h">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/txmempool.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1905">
-          <caret line="127" column="41" lean-forward="true" selection-start-line="127" selection-start-column="41" selection-end-line="127" selection-end-column="41" />
-          <folding>
-            <element signature="e#238#260#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/txdb-leveldb.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="9315">
-          <caret line="621" lean-forward="true" selection-start-line="621" selection-end-line="621" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/rpcwallet.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1830">
-          <caret line="122" column="15" lean-forward="true" selection-start-line="122" selection-start-column="15" selection-end-line="122" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Makefile.am">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/addrman.h">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/alert.h">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/allocators.h">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/compat.h">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/endian.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="12" column="26" selection-start-line="12" selection-start-column="26" selection-end-line="12" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/db.h">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/wallet.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="431">
-          <caret line="5422" column="4" selection-start-line="5422" selection-start-column="4" selection-end-line="5422" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/txdb.h">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/byteswap.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/rpcprotocol.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2907" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/rpcmnemonic.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-690" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/rpcdump.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2312" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/script.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="9045">
-          <caret line="603" column="25" selection-start-line="603" selection-start-column="25" selection-end-line="603" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/script.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="31050">
-          <caret line="2070" column="1" selection-start-line="2070" selection-start-column="1" selection-end-line="2070" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/txmempool.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="240">
@@ -489,58 +392,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/uint256.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5925">
-          <caret line="395" column="36" selection-start-line="395" selection-start-column="36" selection-end-line="395" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Makefile.am">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2798">
-          <caret line="56" column="19" lean-forward="true" selection-start-line="56" selection-start-column="19" selection-end-line="56" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/txdb-leveldb.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1335">
-          <caret line="89" column="15" selection-start-line="89" selection-start-column="15" selection-end-line="89" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/timestampindex.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1024">
-          <caret line="102" column="5" lean-forward="true" selection-start-line="102" selection-start-column="5" selection-end-line="102" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/spentindex.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="15" column="5" selection-start-line="15" selection-start-column="5" selection-end-line="15" selection-end-column="5" />
-          <folding>
-            <element signature="e#294#314#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/addressindex.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="600">
-          <caret line="40" column="26" lean-forward="true" selection-start-line="40" selection-start-column="26" selection-end-line="40" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/serialize.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="10410">
           <caret line="697" column="44" selection-start-line="697" selection-start-column="44" selection-end-line="697" selection-end-column="44" />
-          <folding>
-            <element signature="e#563#586#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -551,69 +406,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/checkpoints.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="750">
-          <caret line="50" column="43" lean-forward="true" selection-start-line="50" selection-start-column="43" selection-end-line="50" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/checkpoints.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="24" column="19" selection-start-line="24" selection-start-column="19" selection-end-line="24" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/init.h">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/rpcblockchain.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3675">
-          <caret line="245" column="72" selection-start-line="245" selection-start-column="72" selection-end-line="245" selection-end-column="72" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/chainparams.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-99">
-          <caret line="91" column="41" lean-forward="true" selection-start-line="91" selection-start-column="41" selection-end-line="91" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/Desktop/tokenpay/src/rpcserver.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="630">
           <caret line="42" column="52" lean-forward="true" selection-start-line="42" selection-start-column="52" selection-end-line="42" selection-end-column="52" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="81" column="23" lean-forward="true" selection-start-line="81" selection-start-column="23" selection-end-line="81" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/rpcserver.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3870">
-          <caret line="258" column="90" selection-start-line="258" selection-start-column="90" selection-end-line="258" selection-end-column="90" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/rpcserver.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6090">
-          <caret line="406" column="22" selection-start-line="406" selection-start-column="22" selection-end-line="406" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/rpcclient.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3450">
-          <caret line="230" selection-start-line="230" selection-end-line="230" />
         </state>
       </provider>
     </entry>
@@ -638,33 +434,64 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/net.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="11640">
-          <caret line="781" column="24" selection-start-line="781" selection-start-column="5" selection-end-line="781" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/init.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5625">
-          <caret line="379" column="27" selection-start-line="379" selection-start-column="27" selection-end-line="379" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/rpcrawtransaction.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
+        <state relative-caret-position="5505">
           <caret line="367" column="5" selection-start-line="367" selection-start-column="5" selection-end-line="367" selection-end-column="5" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main.cpp">
+    <entry file="file://$PROJECT_DIR$/src/rpcwallet.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="40350">
-          <caret line="2690" column="21" selection-start-line="2690" selection-start-column="21" selection-end-line="2690" selection-end-column="21" />
+        <state relative-caret-position="48645">
+          <caret line="3243" column="21" selection-start-line="3243" selection-start-column="21" selection-end-line="3243" selection-end-column="21" />
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="750">
+          <caret line="50" column="5" selection-start-line="50" selection-start-column="5" selection-end-line="50" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/chainparams.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="122" column="34" selection-start-line="122" selection-start-column="34" selection-end-line="122" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/rpcblockchain.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3675">
+          <caret line="245" column="72" selection-start-line="245" selection-start-column="72" selection-end-line="245" selection-end-column="72" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/spentindex.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="210">
+          <caret line="15" column="5" selection-start-line="15" selection-start-column="5" selection-end-line="15" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/timestampindex.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1530">
+          <caret line="102" column="5" lean-forward="true" selection-start-line="102" selection-start-column="5" selection-end-line="102" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/rpcclient.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="405">
+          <caret line="27" column="20" selection-start-line="27" selection-start-column="20" selection-end-line="27" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Makefile.am">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/src/txmempool.cpp">
       <provider selected="true" editor-type-id="text-editor">
@@ -676,17 +503,200 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/rpcwallet.cpp">
+    <entry file="file://$PROJECT_DIR$/src/net.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="729">
-          <caret line="3243" column="21" selection-start-line="3243" selection-start-column="21" selection-end-line="3243" selection-end-column="21" />
+        <state relative-caret-position="11640">
+          <caret line="781" column="24" selection-start-line="781" selection-start-column="5" selection-end-line="781" selection-end-column="24" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
+    <entry file="file://$PROJECT_DIR$/src/rpcprotocol.cpp">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/rpcserver.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="690">
+          <caret line="46" column="34" lean-forward="true" selection-start-line="46" selection-start-column="34" selection-end-line="46" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="40350">
+          <caret line="2690" column="21" selection-start-line="2690" selection-start-column="21" selection-end-line="2690" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/net.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="19" column="9" lean-forward="true" selection-start-line="19" selection-start-column="9" selection-end-line="19" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/txdb.h">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/txdb-leveldb.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1335">
+          <caret line="89" column="15" selection-start-line="89" selection-start-column="15" selection-end-line="89" selection-end-column="15" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/netbase.h">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/netbase.cpp">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/checkpoints.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="24" column="19" selection-start-line="24" selection-start-column="19" selection-end-line="24" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/checkpoints.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="750">
-          <caret line="50" column="5" selection-start-line="50" selection-start-column="5" selection-end-line="50" selection-end-column="5" />
+          <caret line="50" column="43" lean-forward="true" selection-start-line="50" selection-start-column="43" selection-end-line="50" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/anonymize.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="24" lean-forward="true" selection-start-line="24" selection-end-line="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/anonymize.cpp">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/util.cpp">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/util.h">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/uint256.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5925">
+          <caret line="395" column="36" selection-start-line="395" selection-start-column="36" selection-end-line="395" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/init.h">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/core.h">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/bignum.h">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/sync.h">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/byteswap.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="11" selection-start-line="11" selection-end-line="11" />
+          <folding>
+            <element signature="e#358#379#0" expanded="true" />
+            <element signature="e#412#866#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/init.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="28" selection-start-line="28" selection-end-line="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/doc/build-osx.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/rpcprotocol.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="18" column="25" lean-forward="true" selection-start-line="18" selection-start-column="25" selection-end-line="18" selection-end-column="25" />
+          <folding>
+            <element signature="e#551#596#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/compat.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+          <folding>
+            <element signature="e#305#515#0" expanded="true" />
+            <element signature="e#764#846#0" expanded="true" />
+            <element signature="e#1406#1437#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/db.h">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/db.cpp">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2160">
+          <caret line="144" column="69" selection-start-line="144" selection-start-column="69" selection-end-line="144" selection-end-column="69" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Makefile.am">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-825">
+          <caret line="154" column="37" selection-start-line="154" selection-start-column="35" selection-end-line="154" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/addrman.cpp">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/addressindex.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="8" column="9" lean-forward="true" selection-start-line="8" selection-start-column="9" selection-end-line="8" selection-end-column="9" />
+          <folding>
+            <element signature="e#304#324#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/doc/build-unix.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="495">
+          <caret line="33" selection-start-line="33" selection-end-line="37" selection-end-column="72" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/rpcserver.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="18" selection-start-line="9" selection-start-column="18" selection-end-line="9" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/endian.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="24" column="1" selection-start-line="24" selection-start-column="1" selection-end-line="24" selection-end-column="1" />
+          <folding>
+            <element signature="e#375#394#0" expanded="true" />
+            <element signature="e#428#451#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

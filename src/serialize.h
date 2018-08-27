@@ -24,7 +24,7 @@
 #include "allocators.h"
 #include "version.h"
 #include "types.h"
-#include "endian.h"
+#include "compatendian.h"
 
 class CAutoFile;
 class CDataStream;
