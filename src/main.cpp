@@ -2811,39 +2811,42 @@ bool CBlock::ConnectBlock(CTxDB& txdb, CBlockIndex* pindex, bool fJustCheck, boo
                 for (size_t j = 0; j < tx.vin.size(); j++) {
                     const CTxIn input = tx.vin[j];
                     const COutPoint &out = tx.vin[j].prevout;
-                    CTransaction tx;
-                    if (txdb.ReadDiskTx(out, tx))
+                    CTransaction ptx;
+                    if (!txdb.ReadDiskTx(out, ptx))
                     {
-                        if (out.n >= tx.vout.size())
-                            return error("ConnectBlock() : n out of range");
+                        // Check if transaction is made from 0-conf
+                        if (!mempool.lookup(out.hash, ptx))
+                            continue; // If not, simply move on to the next item in the loop.
+                    }
+                    if (out.n >= ptx.vout.size())
+                        return error("ConnectBlock() : n out of range");
 
-                        CTxOut &prevout = tx.vout[out.n];
-                        uint160 hashBytes;
-                        int addressType;
-                        if (prevout.scriptPubKey.IsPayToScriptHash()) {
-                            hashBytes = uint160(std::vector <unsigned char>(prevout.scriptPubKey.begin()+2, prevout.scriptPubKey.begin()+22));
-                            addressType = 2;
-                        } else if (prevout.scriptPubKey.IsPayToPublicKeyHash()) {
-                            hashBytes = uint160(std::vector <unsigned char>(prevout.scriptPubKey.begin()+3, prevout.scriptPubKey.begin()+23));
-                            addressType = 1;
-                        } else if (prevout.scriptPubKey.IsPayToPublicKey()) {
-                            hashBytes = Hash160(prevout.scriptPubKey.begin()+1, prevout.scriptPubKey.end()-1);
-                            addressType = 1;
-                        } else {
-                            hashBytes = 0;
-                            addressType = 0;
-                        }
-                        if (fAddressIndex && addressType > 0) {
-                            // record spending activity
-                            addressIndex.push_back(std::make_pair(CAddressIndexKey(addressType, hashBytes, pindex->nHeight, i, hashTx, j, true), prevout.nValue * -1));
-                            // remove address from unspent index
-                            addressUnspentIndex.push_back(std::make_pair(CAddressUnspentKey(addressType, hashBytes, input.prevout.hash, input.prevout.n), CAddressUnspentValue()));
-                        }
-                        if (fSpentIndex) {
-                            // add the spent index to determine the txid and input that spent an output
-                            // and to find the amount and address from an input
-                            spentIndex.push_back(std::make_pair(CSpentIndexKey(input.prevout.hash, input.prevout.n), CSpentIndexValue(hashTx, j, pindex->nHeight, prevout.nValue, addressType, hashBytes)));
-                        }
+                    CTxOut &prevout = ptx.vout[out.n];
+                    uint160 hashBytes;
+                    int addressType;
+                    if (prevout.scriptPubKey.IsPayToScriptHash()) {
+                        hashBytes = uint160(std::vector <unsigned char>(prevout.scriptPubKey.begin()+2, prevout.scriptPubKey.begin()+22));
+                        addressType = 2;
+                    } else if (prevout.scriptPubKey.IsPayToPublicKeyHash()) {
+                        hashBytes = uint160(std::vector <unsigned char>(prevout.scriptPubKey.begin()+3, prevout.scriptPubKey.begin()+23));
+                        addressType = 1;
+                    } else if (prevout.scriptPubKey.IsPayToPublicKey()) {
+                        hashBytes = Hash160(prevout.scriptPubKey.begin()+1, prevout.scriptPubKey.end()-1);
+                        addressType = 1;
+                    } else {
+                        hashBytes = 0;
+                        addressType = 0;
+                    }
+                    if (fAddressIndex && addressType > 0) {
+                        // record spending activity
+                        addressIndex.push_back(std::make_pair(CAddressIndexKey(addressType, hashBytes, pindex->nHeight, i, hashTx, j, true), prevout.nValue * -1));
+                        // remove address from unspent index
+                        addressUnspentIndex.push_back(std::make_pair(CAddressUnspentKey(addressType, hashBytes, input.prevout.hash, input.prevout.n), CAddressUnspentValue()));
+                    }
+                    if (fSpentIndex) {
+                        // add the spent index to determine the txid and input that spent an output
+                        // and to find the amount and address from an input
+                        spentIndex.push_back(std::make_pair(CSpentIndexKey(input.prevout.hash, input.prevout.n), CSpentIndexValue(hashTx, j, pindex->nHeight, prevout.nValue, addressType, hashBytes)));
                     }
                 }
             }
