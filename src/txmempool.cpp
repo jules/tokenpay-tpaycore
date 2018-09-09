@@ -47,6 +47,7 @@ bool CTxMemPool::remove(const CTransaction &tx, bool fRecursive)
                 mapNextTx.erase(txin.prevout);
             mapTx.erase(hash);
             removeAddressIndex(hash);
+            removeSpentIndex(hash);
 
             if (tx.nVersion == ANON_TXN_VERSION)
             {
