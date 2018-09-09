@@ -46,7 +46,8 @@ bool CTxMemPool::remove(const CTransaction &tx, bool fRecursive)
             BOOST_FOREACH(const CTxIn& txin, tx.vin)
                 mapNextTx.erase(txin.prevout);
             mapTx.erase(hash);
-            
+            removeAddressIndex(hash);
+
             if (tx.nVersion == ANON_TXN_VERSION)
             {
                 // -- remove key images
